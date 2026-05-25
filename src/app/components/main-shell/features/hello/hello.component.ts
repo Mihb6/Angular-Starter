@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import { ApiService } from '../../../../common/service/api.service';
 
@@ -12,7 +12,9 @@ export const ROUTE_HELLO = "hello";
   styleUrl: './hello.component.scss',
   providers: [provideEchartsCore({ echarts: () => import('echarts') })]
 })
-export class HelloComponent {
+export class HelloComponent implements OnInit {
+
+  activeTab: string = 'feeds';
 
   feeds: any[] = [];
   filteredFeeds: any[] = [];
@@ -36,19 +38,64 @@ export class HelloComponent {
   chartOptions = signal<any>(null);
   hasChartData: boolean = false;
   isLoading: boolean = false;
-  activeTab: string = 'feeds';
 
-  constructor(private apiService: ApiService) {
+  attributes: any[] = [];
+  filteredAttributes: any[] = [];
+  selectedAttribute: any = null;
+
+  constructor(private apiService: ApiService, private cdr: ChangeDetectorRef) {}
+
+  ngOnInit() {
+    const savedTab = localStorage.getItem('zlatko_activeTab');
+    if (savedTab) {
+      this.activeTab = savedTab;
+    }
 
     this.apiService.semanticApi.get("13c357a9-ce4d-4377-abc6-1689709907c1").subscribe((res: any) => {
-      this.feeds = res.data.feeds.filter((f: any) =>
-        !f.name.toLowerCase().includes('user input')
-      );
+      this.feeds = res.data.feeds.filter((f: any) => !f.name.toLowerCase().includes('user input'));
       this.filteredFeeds = this.feeds;
+
+      const savedFeed = localStorage.getItem('zlatko_selectedFeed');
+      if (savedFeed) {
+        const foundFeed = this.feeds.find(f => f.name === savedFeed);
+        if (foundFeed) {
+          this.selectFeed(foundFeed);
+          this.cdr.detectChanges(); 
+        }
+      }
+    });
+
+    this.apiService.semanticApi.get("13c357a9-ce4d-4377-abc6-1689709907c1/attributes").subscribe((res: any) => {
+      const rawData = res.data ? res.data : res;
+      this.attributes = rawData.map((attr: any) => ({
+        name: attr.name,
+        path: (attr.parentNamePath ? attr.parentNamePath : 'Zlatko Device') + '/' + attr.name,
+        aicd: attr.description ? attr.description : '-',
+        required: attr.required,
+        readOnly: attr.readOnly,
+        type: attr.dataType,
+        value: attr.value ? attr.value : '-'
+      }));
+      this.filteredAttributes = this.attributes;
+
+      const savedAttr = localStorage.getItem('zlatko_selectedAttr');
+      if (savedAttr) {
+        const foundAttr = this.attributes.find(a => a.name === savedAttr);
+        if (foundAttr) {
+          this.selectAttribute(foundAttr);
+          this.cdr.detectChanges(); 
+        }
+      }
     });
   }
 
+  changeTab(tabName: string) {
+    this.activeTab = tabName;
+    localStorage.setItem('zlatko_activeTab', tabName);
+  }
+
   selectFeed(feed: any) {
+    localStorage.setItem('zlatko_selectedFeed', feed.name);
     this.selectedFeed = feed;
     this.feedName = feed.name;
     this.description = feed.description ?? '-';
@@ -62,21 +109,15 @@ export class HelloComponent {
     this.path = feed.parentNamePath + '/' + feed.name;
     this.dataType = feed.dataType;
     this.latestReceivedValue = feed.lastReceivedReading?.data ?? '-';
-    this.latestReceivedTime = feed.lastReceivedReading
-      ? this.formatTime(feed.lastReceivedReading.receivingTime)
-      : '-';
+    this.latestReceivedTime = feed.lastReceivedReading ? this.formatTime(feed.lastReceivedReading.receivingTime) : '-';
     this.latestSetValue = feed.lastSentReading?.data ?? '-';
-    this.latestSetTime = feed.lastSentReading
-      ? this.formatTime(feed.lastSentReading.receivingTime)
-      : '-';
+    this.latestSetTime = feed.lastSentReading ? this.formatTime(feed.lastSentReading.receivingTime) : '-';
 
     this.chartOptions.set(null);
     this.hasChartData = false;
 
     if (feed.dataType === 'NUMERIC') {
       this.isLoading = true;
-      this.chartOptions.set(null);
-      this.hasChartData = false;
       this.loadChart(feed.name, feed.unitSymbol ?? '');
     }
   }
@@ -84,115 +125,38 @@ export class HelloComponent {
   loadChart(feedName: string, unitSymbol: string) {
     const now = Date.now();
     const from = now - 48 * 60 * 60 * 1000;
-
-    this.apiService.semanticFeedApi.listReadings(
-      "13c357a9-ce4d-4377-abc6-1689709907c1",
-      feedName,
-      { from: from, to: now }
-    ).subscribe((res: any) => {
+    this.apiService.semanticFeedApi.listReadings("13c357a9-ce4d-4377-abc6-1689709907c1", feedName, { from: from, to: now }).subscribe((res: any) => {
       this.isLoading = false;
       const readings = res.data;
-
       if (!readings || readings.length === 0) {
         this.hasChartData = false;
         this.chartOptions.set({});
         return;
       }
-
       const chartData = readings.map((r: any) => [r.recordingTime, parseFloat(r.data)]);
-      const values = readings.map((r: any) => parseFloat(r.data));
-      const minValue = values.reduce((a: number, b: number) => Math.min(a, b), Infinity);
-      const maxValue = values.reduce((a: number, b: number) => Math.max(a, b), -Infinity);
-      const yAxisMin = Math.floor(minValue - (maxValue - minValue) * 0.1);
-      const yAxisMax = Math.ceil(maxValue + (maxValue - minValue) * 0.1);
-
       this.hasChartData = true;
       this.chartOptions.set({
-        backgroundColor: 'transparent',
-        tooltip: {
-          trigger: 'axis',
-          backgroundColor: '#2a2a2a',
-          borderColor: '#444',
-          textStyle: { color: '#fff' },
-          formatter: (params: any) => {
-            let param = params[0];
-            const date = new Date(param.value[0]);
-            const timeStr = date.toLocaleTimeString('sr-RS', { hour: '2-digit', minute: '2-digit' });
-            return `${timeStr}<br/>${param.marker} <b>${param.value[1]} ${unitSymbol}</b>`;
-          }
-        },
-        grid: { left: '10%', right: '8%', top: '10%', bottom: '12%' },
-        dataZoom: [{ type: 'inside', xAxisIndex: 0, filterMode: 'filter' }],
-        xAxis: {
-          type: 'time',
-          boundaryGap: ['5%', '5%'],
-          min: from,
-          max: now,
-          axisLabel: {
-            color: '#888', fontSize: 11,
-            formatter: (value: number) => {
-              const date = new Date(value);
-              const h = String(date.getHours()).padStart(2, '0');
-              const m = String(date.getMinutes()).padStart(2, '0');
-              return `${h}:${m}`;
-            }
-          },
-          axisLine: { lineStyle: { color: '#333' } },
-          axisTick: { show: false },
-          splitLine: { show: true, lineStyle: { color: '#252525' } }
-        },
-        yAxis: {
-          type: 'value',
-          name: unitSymbol,
-          min: yAxisMin,
-          max: yAxisMax,
-          nameTextStyle: { color: '#888', fontSize: 12, padding: [0, 0, 10, -30] },
-          axisLabel: { color: '#888', fontSize: 11 },
-          axisLine: { show: false },
-          axisTick: { show: false },
-          splitLine: { lineStyle: { color: '#252525' } }
-        },
-        series: [{
-          data: chartData,
-          type: 'line',
-          symbol: readings.length < 100 ? 'circle' : 'none',
-          symbolSize: 6,
-          smooth: false,
-          large: readings.length > 1000,
-          sampling: readings.length > 1000 ? 'lttb' : undefined,
-          lineStyle: { color: '#e2c630', width: 1.5 },
-          itemStyle: { color: '#e2c630' },
-          areaStyle: {
-            color: {
-              type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
-              colorStops: [
-                { offset: 0, color: 'rgba(226, 198, 48, 0.25)' },
-                { offset: 1, color: 'rgba(226, 198, 48, 0.0)' }
-              ]
-            }
-          }
-        }]
+        series: [{ data: chartData, type: 'line', lineStyle: { color: '#e2c630' } }]
       });
+      this.cdr.detectChanges(); 
     });
   }
 
+  selectAttribute(attr: any) {
+    localStorage.setItem('zlatko_selectedAttr', attr.name);
+    this.selectedAttribute = attr;
+  }
+
   filterFeeds(text: string) {
-    if (!text) {
-      this.filteredFeeds = this.feeds;
-      return;
-    }
-    this.filteredFeeds = this.feeds.filter(f =>
-      f.name.toLowerCase().includes(text.toLowerCase())
-    );
+    this.filteredFeeds = text ? this.feeds.filter(f => f.name.toLowerCase().includes(text.toLowerCase())) : this.feeds;
+  }
+
+  filterAttributes(text: string) {
+    this.filteredAttributes = text ? this.attributes.filter(a => a.name.toLowerCase().includes(text.toLowerCase())) : this.attributes;
   }
 
   formatTime(timestamp: number): string {
     const date = new Date(timestamp);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${day}/${month}/${year} at ${hours}:${minutes}`;
+    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()} at ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
   }
 }

@@ -1,24 +1,22 @@
 <div class="page">
 
-  <!-- TABOVI GORE -->
   <div class="tabs">
     <button
       class="tab"
       [class.active]="activeTab === 'feeds'"
-      (click)="activeTab = 'feeds'"
+      (click)="changeTab('feeds')"
     >
       Feeds
     </button>
     <button
       class="tab"
       [class.active]="activeTab === 'attributes'"
-      (click)="activeTab = 'attributes'"
+      (click)="changeTab('attributes')"
     >
       Attributes
     </button>
   </div>
 
-  <!-- FEEDS TAB -->
   @if (activeTab === 'feeds') {
     <div class="layout">
 
@@ -151,12 +149,74 @@
     </div>
   }
 
-  <!-- ATTRIBUTES TAB -->
   @if (activeTab === 'attributes') {
     <div class="layout">
-      <div class="container">
-        <p style="color: #888;">Attributes coming soon...</p>
+      
+      <div class="sidebar">
+        <div class="search-box">
+          <input
+            type="text"
+            placeholder="Search"
+            (input)="filterAttributes($any($event.target).value)"
+          />
+          <span class="search-icon">🔍</span>
+        </div>
+        <div class="divider"></div>
+        @for (attr of filteredAttributes; track attr.name) {
+          <div
+            class="feed-item"
+            [class.active]="selectedAttribute?.name === attr.name"
+            (click)="selectAttribute(attr)"
+          >
+            <span class="feed-icon">☰</span>
+            <span class="feed-name">{{ attr.name }}</span>
+          </div>
+        }
       </div>
+
+      <div class="divider-vertical"></div>
+
+      @if (selectedAttribute) {
+        <div class="container">
+          
+          <div class="card">
+            <span class="label">Path</span>
+            <span class="value">{{ selectedAttribute.path }}</span>
+          </div>
+
+          <div class="card has-action">
+            <div class="info-group">
+              <span class="label">AICD</span>
+              <span class="value">{{ selectedAttribute.aicd }}</span>
+            </div>
+            <span class="action-icon">✎</span>
+          </div>
+
+          <div class="card">
+            <span class="label">Required</span>
+            <span class="value-icon">{{ selectedAttribute.required ? '✓' : '✕' }}</span>
+          </div>
+
+          <div class="card">
+            <span class="label">Read only</span>
+            <span class="value-icon">{{ selectedAttribute.readOnly ? '✓' : '✕' }}</span>
+          </div>
+
+          <div class="card">
+            <span class="label">Type</span>
+            <span class="value">{{ selectedAttribute.type }}</span>
+          </div>
+
+          <div class="card has-action">
+            <div class="info-group">
+              <span class="label">Value</span>
+              <span class="value">{{ selectedAttribute.value }}</span>
+            </div>
+            <span class="action-icon">✎</span>
+          </div>
+
+        </div>
+      }
     </div>
   }
 
