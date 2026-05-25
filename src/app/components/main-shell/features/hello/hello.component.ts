@@ -36,6 +36,7 @@ export class HelloComponent {
   chartOptions = signal<any>(null);
   hasChartData: boolean = false;
   isLoading: boolean = false;
+  activeTab: string = 'feeds';
 
   constructor(private apiService: ApiService) {
 
