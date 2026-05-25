@@ -1,0 +1,41 @@
+{
+  "NAME_CHANGE": "Personal information",
+  "NAME_CHANGE_FIRST_NAME": "First name",
+  "NAME_CHANGE_LAST_NAME": "Last name",
+  "NAME_CHANGE_EMAIL": "Email",
+  "NAME_CHANGE_CONFIRM": "Save changes",
+  "NAME_CHANGE_SUCCESS": "Name updated",
+
+  "PASSWORD_CHANGE": "Password change",
+  "PASSWORD_CHANGE_OLD_PASSWORD": "Old password",
+  "PASSWORD_CHANGE_NEW_PASSWORD": "New password",
+  "PASSWORD_CHANGE_REPEAT_PASSWORD": "Confirm new password",
+  "PASSWORD_CHANGE_PASSWORDS_DO_NOT_MATCH": "Passwords do not match",
+  "PASSWORD_CHANGE_CONFIRM": "Change password",
+  "PASSWORD_CHANGE_SUCCESS": "Password updated",
+
+  "TWO_FACTOR_AUTHENTICATION": "Two-factor authentication",
+  "TWO_FACTOR_AUTHENTICATION_INSTRUCTIONS_INFO": "Two-factor authentication needs verification, please follow the instructions below.",
+  "TWO_FACTOR_AUTHENTICATION_INSTRUCTIONS": "Please use your authenticator app to scan the QR-code, then enter the verification code provided by the authenticator app.",
+  "TWO_FACTOR_AUTHENTICATION_DISABLED": "Two-factor authentication disabled.",
+  "TWO_FACTOR_AUTHENTICATION_VERIFY_SETUP": "Verify setup",
+  "TWO_FACTOR_AUTHENTICATION_ENABLED": "Two-factor authentication enabled.",
+  "TWO_FACTOR_AUTHENTICATION_CONFIRMATION_TITLE": "Disable two-factor authentication",
+  "TWO_FACTOR_AUTHENTICATION_PASSWORD": "Password",
+  "TWO_FACTOR_AUTHENTICATION_ERROR_INVALID_CODE": "Invalid code",
+  "ACCESS_ERROR": "There was a problem signing in to your account. Please try again.",
+
+  "SEMANTIC_DISPLAY": "Data browser display style",
+  "SEMANTIC_DISPLAY_GRID": "Grid",
+  "SEMANTIC_DISPLAY_LIST": "List",
+  "SEMANTIC_DISPLAY_TREE": "Tree",
+
+  "THEME": "Theme selector",
+  "THEME_SYSTEM": "System theme",
+  "THEME_LIGHT": "Light theme",
+  "THEME_DARK": "Dark theme",
+
+  "SCAN_THIS_CODE_TO_CONNECT_YOUR_SMARTPHONE": "Scan this QR code in order to connect your smartphone to company's server\n\n",
+
+  "DISABLE_2FA_BUTTON_TOOLTIP": "Two-factor authentication is enforced and can't be disabled"
+}

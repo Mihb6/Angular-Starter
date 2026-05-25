@@ -1,0 +1,35 @@
+<mat-card class="w-160 p-4">
+  <div class="flex flex-col gap-y-4">
+    <h2>{{ 'SETTINGS.NAME_CHANGE' | translate }}</h2>
+
+    <form [formGroup]="form" class="flex flex-col gap-y-4">
+      <div class="flex flex-row gap-x-4">
+        <!-- FIRST NAME -->
+        <mat-form-field floatLabel="always" class="flex flex-grow">
+          <mat-label>{{ 'SETTINGS.NAME_CHANGE_FIRST_NAME' | translate }}</mat-label>
+          <input matInput type="text" autocomplete="off" formControlName="firstName"/>
+          <mat-error *ngIf="form.get('firstName')?.hasError('required')">{{ 'COMMON.ERROR_VALIDATION_REQUIRED' | translate }}</mat-error>
+          <mat-error *ngIf="form.get('firstName')?.hasError('maxlength')">{{ 'COMMON.ERROR_VALIDATION_MAX_LENGTH' | translate:{max: 30} }}</mat-error>
+        </mat-form-field>
+
+        <!-- LAST NAME -->
+        <mat-form-field floatLabel="always" class="flex flex-grow">
+          <mat-label>{{ 'SETTINGS.NAME_CHANGE_LAST_NAME' | translate }}</mat-label>
+          <input matInput type="text" autocomplete="off" formControlName="lastName"/>
+          <mat-error *ngIf="form.get('lastName')?.hasError('required')">{{ 'COMMON.ERROR_VALIDATION_REQUIRED' | translate }}</mat-error>
+          <mat-error *ngIf="form.get('lastName')?.hasError('maxlength')">{{ 'COMMON.ERROR_VALIDATION_MAX_LENGTH' | translate:{max: 30} }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- EMAIL -->
+      <mat-form-field floatLabel="always">
+        <mat-label>{{ 'SETTINGS.NAME_CHANGE_EMAIL' | translate }}</mat-label>
+        <input matInput type="email" autocomplete="off" formControlName="email"/>
+      </mat-form-field>
+    </form>
+
+    <div class="flex flex-row justify-end items-center">
+      <button mat-stroked-button class="no-margin" [disabled]="form.invalid || form.pristine" (click)="confirm()">{{ 'SETTINGS.NAME_CHANGE_CONFIRM' | translate }}</button>
+    </div>
+  </div>
+</mat-card>

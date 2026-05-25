@@ -1,0 +1,19 @@
+<div class="flex flex-col items-center justify-center h-screen bg-cover bg-center" [ngStyle]="{ backgroundImage: 'url(' + signInImage() + ')'}">
+  <mat-card class="p-8">
+    <div class="flex flex-col items-center justify-center gap-y-6">
+      <div class="flex-col justify-center items-center">
+        <img class="flex max-h-[40px]" [attr.src]="logo()" alt="logo"/>
+      </div>
+
+      <div>
+        <mat-icon [svgIcon]="image()" class="image-verify-user"></mat-icon>
+      </div>
+      <div class="message-wrapper flex flex-col items-center justify-center">
+        <h2>{{ title() | translate }}</h2>
+        <p>{{ message() | translate }}</p>
+        <button mat-flat-button color="primary" (click)="gotoLogin()" type="button">Go to Log in</button>
+      </div>
+      <div *ngIf="whiteLabeling()?.copyrightVisible" class="copyright-info"> {{ copyright() }} </div>
+    </div>
+  </mat-card>
+</div>

@@ -1,0 +1,15 @@
+<div class="flex flex-col items-center justify-center h-screen">
+  <mat-card class="p-8">
+    <div class="flex flex-col items-center justify-center gap-y-6">
+      <div>
+        <mat-icon svgIcon="ico_confused" class="image-verify-user"></mat-icon>
+      </div>
+      <div class="message-wrapper flex flex-col items-center justify-center">
+        <h2>{{ 'UNAUTHENTICATED.NO_LICENSE_FOUND' | translate }}</h2>
+        <p>{{ 'UNAUTHENTICATED.NO_LICENSE_PROMPT' | translate }}</p>
+        <input type="file" class="hidden" [accept]="'.txt'" (change)="onFilePicked($event)" #fileUpload>
+        <button mat-flat-button color="primary" (click)="fileUpload.click()" type="button">{{ 'UNAUTHENTICATED.UPLOAD_LICENCE' | translate }}</button>
+      </div>
+    </div>
+  </mat-card>
+</div>

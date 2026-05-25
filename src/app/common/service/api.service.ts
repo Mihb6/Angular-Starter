@@ -1,0 +1,114 @@
+import { Injectable } from '@angular/core';
+import { ApiClient } from "../../rest/api-client";
+import { AuthenticationApi } from "../../rest/authentication/authentication.api";
+import { UserApi } from "../../rest/user/user.api";
+import { GlobalRoleApi } from "../../rest/roles/global-role.api";
+import { RuleEngineApi } from "../../rest/rule-engine/rule-engine.api";
+import { SemanticTypeApi } from "../../rest/types/semantic-type.api";
+import { UserGroupApi } from "../../rest/user-group/user-group.api";
+import { UserGroupUsersApi } from "../../rest/user-group/user-group-users.api";
+import { UserRoleApi } from "../../rest/user/user-role.api";
+import { UserGroupAccessApi } from "../../rest/user-group/user-group-access.api";
+import { AssetRoleApi } from "../../rest/roles/asset-role.api";
+import { ReadingTypeApi } from "../../rest/reading-type/reading-type.api";
+import { UnitApi } from "../../rest/reading-type/unit.api";
+import { TenantVariableApi } from "../../rest/tenant-settings/tenant-variable.api";
+import { AccessKeyApi } from "../../rest/tenant-settings/access-key.api";
+import { MyTenantApi } from "../../rest/tenant-settings/my-tenant.api";
+import { SemanticTypeFeedApi } from "../../rest/types/semantic-type-feed.api";
+import { SemanticTypeAttributeApi } from "../../rest/types/semantic-type-attribute.api";
+import { SemanticTypeHierarchyApi } from "../../rest/types/semantic-type-hierarchy.api";
+import { SemanticTypeParametersApi } from "../../rest/types/semantic-type-parameters.api";
+import { SemanticApi } from "../../rest/data/semantic.api";
+import { SemanticFeedApi } from "../../rest/data/semantic-feed.api";
+import { SemanticAttributeApi } from "../../rest/data/semantic-attribute.api";
+import { ProfileApi } from "../../rest/settings/profile.api";
+import { MessagesApi } from "../../rest/messages/messages.api";
+import { ImageApi } from "../../rest/+common/image.api";
+import { MessageTemplatesApi } from "../../rest/message-templates/message-templates.api";
+import { MessageSubscriptionsApi } from "../../rest/message-subscriptions/message-subscriptions.api";
+import { InfoApi } from "../../rest/settings/info.api";
+import { SemanticParametersApi } from "../../rest/types/semantic-parameters.api";
+import { TotpApi } from "../../rest/totp/totp.api";
+import { TenantManagementApi } from "../../rest/tenant-management/tenant-management.api";
+import { DeviceApi } from "../../rest/device/device.api";
+import { FileTransferApi } from "../../rest/file-transfer/file-transfer.api";
+import { DeviceGroupsApi } from "../../rest/device-groups/device-groups.api";
+import { DashboardApi } from "../../rest/dashboard/dashboard.api";
+import { DashboardDataApi } from "../../rest/dashboard/dashboard-data.api";
+import { WidgetApi } from "../../rest/widget/widget.api";
+import { EulaApi } from "../../rest/settings/eula.api";
+import { LicenceApi } from "../../rest/settings/licence.api";
+import { PlatformConfigurationApi } from "../../rest/settings/platform-configuration.api";
+import { AuditLogApi } from "../../rest/audit-log/audit-log.api";
+import { SemanticDocumentApi } from "../../rest/data/semantic-document.api";
+import { SemanticTypeDocumentApi } from "../../rest/types/semantic-type-document.api";
+import { WhiteLabelingInfoApi } from "../../rest/white-labeling/white-labeling-info.api";
+import { DeviceDeviceGroupsApi } from "../../rest/device/device-device-groups.api";
+import { SemanticTypeStreamingApi } from "../../rest/types/semantic-type-streaming.api";
+import { SemanticStreamingApi } from "../../rest/data/semantic-streaming.api";
+import { StreamingDestinationApi } from "../../rest/streaming/streaming-destination.api";
+import { OpenidProviderApi } from "../../rest/openid/openid-provider.api";
+import { EmailServerApi } from "../../rest/email-server/email-server.api";
+import { WhiteLabelingApi } from "../../rest/tenant-management/white-labeling.api";
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ApiService {
+
+  public readonly infoApi = new InfoApi(this.apiClient);
+  public readonly authenticationApi = new AuthenticationApi(this.apiClient);
+  public readonly imageApi = new ImageApi(this.apiClient);
+  public readonly profileApi = new ProfileApi(this.apiClient);
+  public readonly totpApi = new TotpApi(this.apiClient);
+  public readonly userApi = new UserApi(this.apiClient);
+  public readonly userRoleApi = new UserRoleApi(this.apiClient);
+  public readonly globalRoleApi = new GlobalRoleApi(this.apiClient);
+  public readonly ruleEngineApi = new RuleEngineApi(this.apiClient);
+  public readonly assetRoleApi = new AssetRoleApi(this.apiClient);
+  public readonly userGroupApi = new UserGroupApi(this.apiClient);
+  public readonly userGroupUsersApi = new UserGroupUsersApi(this.apiClient);
+  public readonly userGroupAccessApi = new UserGroupAccessApi(this.apiClient);
+  public readonly readingTypeApi = new ReadingTypeApi(this.apiClient);
+  public readonly unitApi = new UnitApi(this.apiClient);
+  public readonly tenantVariableApi = new TenantVariableApi(this.apiClient);
+  public readonly accessKeyApi = new AccessKeyApi(this.apiClient);
+  public readonly myTenantApi = new MyTenantApi(this.apiClient);
+  public readonly semanticTypeApi = new SemanticTypeApi(this.apiClient);
+  public readonly semanticTypeFeedApi = new SemanticTypeFeedApi(this.apiClient);
+  public readonly semanticTypeAttributeApi = new SemanticTypeAttributeApi(this.apiClient);
+  public readonly semanticTypeParametersApi = new SemanticTypeParametersApi(this.apiClient);
+  public readonly semanticTypeHierarchyApi = new SemanticTypeHierarchyApi(this.apiClient);
+  public readonly semanticTypeStreamingApi = new SemanticTypeStreamingApi(this.apiClient);
+  public readonly semanticApi = new SemanticApi(this.apiClient);
+  public readonly semanticFeedApi = new SemanticFeedApi(this.apiClient);
+  public readonly semanticAttributeApi = new SemanticAttributeApi(this.apiClient);
+  public readonly semanticParametersApi = new SemanticParametersApi(this.apiClient);
+  public readonly semanticStreamingApi = new SemanticStreamingApi(this.apiClient);
+  public readonly messagesApi = new MessagesApi(this.apiClient);
+  public readonly messageTemplatesApi = new MessageTemplatesApi(this.apiClient);
+  public readonly messageSubscriptionsApi = new MessageSubscriptionsApi(this.apiClient);
+  public readonly tenantManagementApi = new TenantManagementApi(this.apiClient);
+  public readonly device = new DeviceApi(this.apiClient);
+  public readonly fileTransferApi = new FileTransferApi(this.apiClient);
+  public readonly deviceGroup = new DeviceGroupsApi(this.apiClient);
+  public readonly dashboard = new DashboardApi(this.apiClient);
+  public readonly dashboardData = new DashboardDataApi(this.apiClient);
+  public readonly widget = new WidgetApi(this.apiClient);
+  public readonly eula = new EulaApi(this.apiClient);
+  public readonly licence = new LicenceApi(this.apiClient);
+  public readonly platformConfiguration = new PlatformConfigurationApi(this.apiClient);
+  public readonly auditLog = new AuditLogApi(this.apiClient);
+  public readonly semanticDocumentApi = new SemanticDocumentApi(this.apiClient);
+  public readonly semanticTypeDocumentApi = new SemanticTypeDocumentApi(this.apiClient);
+  public readonly whiteLabelingInfoApi = new WhiteLabelingInfoApi(this.apiClient);
+  public readonly whiteLabelingApi = new WhiteLabelingApi(this.apiClient);
+  public readonly deviceDeviceGroupsApi = new DeviceDeviceGroupsApi(this.apiClient);
+  public readonly streamingDestinationApi = new StreamingDestinationApi(this.apiClient);
+  public readonly openIdProviderApi = new OpenidProviderApi(this.apiClient);
+  public readonly emailServerApi = new EmailServerApi(this.apiClient);
+
+  constructor(private apiClient: ApiClient) {
+  }
+}

@@ -1,0 +1,104 @@
+<div class="flex items-center justify-center h-screen bg-cover bg-center" [ngStyle]="{ backgroundImage: 'url(' + signInImage() + ')'}">
+  <mat-card class="p-8">
+    <div class="flex flex-col items-center justify-center space-y-6">
+      <div class="flex flex-col items-center justify-center gap-y-6">
+        <img class="flex max-h-[40px]" [attr.src]="logo()" alt="logo"/>
+        <mat-icon class="text-mat-sys-primary">check_circle</mat-icon>
+        <h1 class="!text-[28px] !font-medium">{{ 'UNAUTHENTICATED.ACTIVATE_ACCOUNT' | translate }}</h1>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col space-y-6 w-126">
+        <!--NAME-->
+        <div class="w-full flex flex-row justify-between gap-x-4">
+          <div class="max-h-[180px] w-[calc(50%-8px)]">
+            <mat-form-field class="w-full">
+              <mat-label>{{ 'UNAUTHENTICATED.ACTIVATE_ACCOUNT_FIRST_NAME' | translate }}</mat-label>
+              <input matInput formControlName="firstName"/>
+
+              @if (form.get('firstName')?.hasError('required')) {
+                <mat-error>{{ 'COMMON.ERROR_VALIDATION_REQUIRED' | translate }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="max-h-[180px] w-[calc(50%-8px)]">
+            <mat-form-field class="w-full">
+              <mat-label>{{ 'UNAUTHENTICATED.ACTIVATE_ACCOUNT_LAST_NAME' | translate }}</mat-label>
+              <input matInput formControlName="lastName"/>
+
+              @if (form.get('lastName')?.hasError('required')) {
+                <mat-error>{{ 'COMMON.ERROR_VALIDATION_REQUIRED' | translate }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!--PASSWORD-->
+        <mat-form-field>
+          <mat-label>{{ 'UNAUTHENTICATED.SIGN_IN_PASSWORD' | translate }}</mat-label>
+          <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password"/>
+          <button mat-icon-button matSuffix (click)="clickEventPassword($event)">
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+
+          @if (form.get('password')?.hasError('required')) {
+            <mat-error>{{ 'COMMON.ERROR_VALIDATION_REQUIRED' | translate }}</mat-error>
+          }
+
+          @if (form.get('password')?.hasError('minlength')) {
+            <mat-error>{{ 'COMMON.ERROR_VALIDATION_MIN_LENGTH' | translate: {min: 8} }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>{{ 'UNAUTHENTICATED.AGAIN_PASSWORD' | translate }}</mat-label>
+          <input matInput [type]="hideAgainPassword() ? 'password' : 'text'" formControlName="againPassword"/>
+          <button mat-icon-button matSuffix (click)="clickEventAgainPassword($event); $event.stopPropagation()">
+            <mat-icon>{{ hideAgainPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+
+          @if (form.get('againPassword')?.hasError('required')) {
+            <mat-error>{{ 'COMMON.ERROR_VALIDATION_REQUIRED' | translate }}</mat-error>
+          }
+
+          @if (form.get('againPassword')?.hasError('minlength')) {
+            <mat-error>{{ 'COMMON.ERROR_VALIDATION_MIN_LENGTH' | translate: {min: 8} }}</mat-error>
+          }
+        </mat-form-field>
+
+        @if (form.hasError('passwordMismatch') && form.get('againPassword')?.dirty) {
+          <mat-error>{{ 'UNAUTHENTICATED.PASSWORDS_MISMATCH_ERROR' | translate }}</mat-error>
+        }
+
+        <!--CHECKBOX AND PROGRESS BAR-->
+        <mat-checkbox formControlName="acceptTosPrivacy">
+          {{ 'UNAUTHENTICATED.ACTIVATE_ACCOUNT_TOS_PRIVACY_I_ACCEPT' | translate }}
+          <a target="_blank" [href]="whiteLabeling()?.termsOfServiceUrl" class="text-[var(--mat-sys-primary)] underline">{{ 'UNAUTHENTICATED.ACTIVATE_ACCOUNT_TOS_PRIVACY_PRIVACY_LINK' | translate }}</a>
+          {{ 'UNAUTHENTICATED.ACTIVATE_ACCOUNT_TOS_PRIVACY_AND' | translate }}
+          <a target="_blank" [href]="whiteLabeling()?.privacyPolicyUrl" class="text-[var(--mat-sys-primary)] underline">{{ 'UNAUTHENTICATED.ACTIVATE_ACCOUNT_TOS_PRIVACY_TOS_LINK' | translate }}</a>
+        </mat-checkbox>
+
+        @if (whiteLabeling()?.gdprAgeConsentVisible) {
+          <mat-checkbox formControlName="accept16Years">
+            <span>{{ 'UNAUTHENTICATED.ACTIVATE_ACCOUNT_I_AM_SIXTEEN_YEARS_AND_OLDER' | translate }}</span>
+          </mat-checkbox>
+        }
+
+        @if (requestInProgress()) {
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        }
+
+        <!--BUTTONS-->
+        <div class="flex justify-between">
+          <div [routerLink]="['../', 'sing-in']" class="flex flex-row items-center gap-x-2 hover:underline hover:cursor-pointer">
+            <mat-icon>keyboard_arrow_left</mat-icon>
+            <span class="justify-start">{{ 'UNAUTHENTICATED.BACK_TO_SIGN_IN' | translate }}</span>
+          </div>
+          <button mat-flat-button (submit)="submit()" [disabled]="!form.valid || !form.get('acceptTosPrivacy')?.value || !form.get('accept16Years')?.value">{{ 'UNAUTHENTICATED.ACTIVATE_ACCOUNT' | translate }}</button>
+        </div>
+      </form>
+
+      <div *ngIf="whiteLabeling()?.copyrightVisible" class="copyright-info"> {{ copyright() }}</div>
+    </div>
+  </mat-card>
+</div>

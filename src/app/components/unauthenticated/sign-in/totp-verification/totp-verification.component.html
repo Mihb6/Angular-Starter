@@ -1,0 +1,7 @@
+<div class="flex flex-col items-center justify-center gap-y-8">
+  <div>{{ 'SETTINGS.TWO_FACTOR_AUTHENTICATION_INSTRUCTIONS' | translate }}</div>
+  @if (qrCode() | async; as qrCode) {
+    <qrcode [qrdata]="qrCode.data" [width]="256" [errorCorrectionLevel]="'M'"/>
+    <ng-otp-input class="pb-2 text-black" [formControl]="otpControl" [config]="{ length: 6 }"/>
+  }
+</div>

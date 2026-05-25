@@ -1,0 +1,66 @@
+<mat-toolbar class="flex grow">
+  <div *ngIf="activeUser$ | async as activeUser" class="flex grow">
+    @if (authorities$ | async; as authorities) {
+      <div class="flex grow flex-row justify-between">
+        <div class="w-48 flex justify-center items-center">
+          <a [routerLink]="['/home']" class="flex grow !max-h-[40px]">
+            <img class="flex max-h-[40px]" [attr.src]="logo()" alt="logo"/>
+          </a>
+        </div>
+
+        <div class="flex items-center gap-2">
+          @if (authorities.length > 0) {
+            <button mat-icon-button [matMenuTriggerFor]="tenantMenu">
+              <mat-icon class="text-mat-sys-primary" [svgIcon]="'feature_platform_management'"></mat-icon>
+            </button>
+          }
+
+          <div class="flex justify-center items-center cursor-pointer" [matMenuTriggerFor]="sessionMenu">
+            <div class="flex justify-center items-center bg-mat-sys-primary-container rounded-full w-8 h-8">
+              <span class="text-xs text-center">{{ activeUser.firstName?.[0]?.toLocaleUpperCase() ?? '' }}{{ activeUser.lastName?.[0]?.toLocaleUpperCase() ?? '' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <mat-menu #tenantMenu="matMenu" xPosition="before">
+        <ng-template matMenuContent>
+          <div class="flex flex-col">
+            @for (authority of authorities; track $index) {
+              @if (activeAuthority$ | async; as activeAuthority) {
+                <button mat-menu-item (click)="selectAuthority(authority)"
+                        [ngClass]="{'text-mat-sys-tertiary cursor-auto pointer-events-none': authority.contextName === activeAuthority.contextName}">
+                  <span>{{ authority.contextName }}</span>
+                </button>
+              }
+            }
+          </div>
+        </ng-template>
+      </mat-menu>
+
+      <mat-menu #sessionMenu="matMenu" xPosition="before">
+        <ng-template matMenuContent>
+          <div class="flex flex-col">
+            <!-- USER DATA -->
+            <div class="flex flex-col p-4">
+              <span class="text-mat-sys-tertiary">{{ activeUser.firstName }} {{ activeUser.lastName }}</span>
+              <span class="break-words">{{ activeUser.email }}</span>
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="flex flex-row">
+              <button mat-menu-item class="flex flew-row items-center" (click)="goToSettings()">
+                <mat-icon class="text-mat-sys-primary">settings</mat-icon>
+                <span>{{ 'COMMON.MAIN_SETTINGS' | translate }}</span>
+              </button>
+              <button mat-menu-item class="flex flew-row items-center" (click)="logOut()">
+                <mat-icon class="text-mat-sys-primary">power_settings_new</mat-icon>
+                <span>{{ 'COMMON.MAIN_LOGOUT' | translate }}</span>
+              </button>
+            </div>
+          </div>
+        </ng-template>
+      </mat-menu>
+    }
+  </div>
+</mat-toolbar>

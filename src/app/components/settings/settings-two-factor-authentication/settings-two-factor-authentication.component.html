@@ -1,0 +1,42 @@
+<mat-card class="w-160 p-4">
+  <div class="flex flex-col">
+    <h2>{{ 'SETTINGS.TWO_FACTOR_AUTHENTICATION' | translate }}</h2>
+    <div>
+      @if (twoFactorAuthStatus$ | async; as status) {
+        @if (status.value === 'DISABLED') {
+          <div class="flex items-center">
+            <mat-icon>close</mat-icon>
+            <div>{{ 'SETTINGS.TWO_FACTOR_AUTHENTICATION_DISABLED' | translate }}</div>
+          </div>
+          <div class="flex flex-row justify-end items-center">
+            <button mat-stroked-button class="no-margin"
+                    (click)="onEnable()">{{ 'COMMON.ENABLE' | translate }}
+            </button>
+          </div>
+        } @else if (status.value === 'VERIFICATION_NEEDED') {
+          @if (qrCode$ | async; as qrCode) {
+            <div class="flex items-center">
+              <mat-icon>autorenew</mat-icon>
+              <div>{{ 'SETTINGS.TWO_FACTOR_AUTHENTICATION_INSTRUCTIONS_INFO' | translate }}</div>
+            </div>
+            <div class="flex flex-col items-center justify-center gap-y-8">
+              <div>{{ 'SETTINGS.TWO_FACTOR_AUTHENTICATION_INSTRUCTIONS' | translate }}</div>
+              <qrcode [qrdata]=qrCode.data [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+              <ng-otp-input class="pb-2 text-black" [formControl]="otpControl" [config]="{ length: 6 }"></ng-otp-input>
+            </div>
+          }
+        } @else {
+          <div class="flex items-center">
+            <mat-icon>check</mat-icon>
+            <div>{{ 'SETTINGS.TWO_FACTOR_AUTHENTICATION_ENABLED' | translate }}</div>
+          </div>
+          <div class="flex justify-end pt-4">
+            <div [matTooltip]="is2faEnforced() ? ('SETTINGS.DISABLE_2FA_BUTTON_TOOLTIP' | translate) : ''">
+              <button mat-stroked-button class="no-margin" (click)="onDisable()" [disabled]="is2faEnforced()">Disable</button>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</mat-card>

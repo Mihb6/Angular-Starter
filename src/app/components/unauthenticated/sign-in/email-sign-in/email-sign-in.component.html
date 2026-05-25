@@ -1,0 +1,78 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col space-y-4">
+  <!-- EMAIL -->
+  <mat-form-field>
+    <mat-label>{{ 'UNAUTHENTICATED.SIGN_IN_EMAIL' | translate }}</mat-label>
+    <input matInput type="email" formControlName="email"/>
+    @if (form.get('email')?.hasError('required')) {
+      <mat-error>{{ 'COMMON.ERROR_VALIDATION_REQUIRED' | translate }}</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- PASSWORD -->
+  <mat-form-field>
+    <mat-label>{{ 'UNAUTHENTICATED.SIGN_IN_PASSWORD' | translate }}</mat-label>
+    <input matInput [type]="passwordHidden ? 'password' : 'text'" formControlName="password"/>
+    <mat-icon matSuffix class="text-mat-sys-primary"
+              [matTooltip]="(passwordHidden ? 'AUTH-UI.LOGIN_TOOLTIP_SHOW_PASSWORD' : 'AUTH-UI.LOGIN_TOOLTIP_HIDE_PASSWORD') | translate"
+              matTooltipPosition="above" (click)="$event.stopPropagation(); passwordHidden = !passwordHidden">
+      <span *ngIf="!passwordHidden; else hidePassword" [class]="'show-password'">visibility</span>
+      <ng-template #hidePassword>
+        <span [class]="'show-password'">visibility_off</span>
+      </ng-template>
+    </mat-icon>
+    @if (form.get('password')?.hasError('required')) {
+      <mat-error>{{ 'COMMON.ERROR_VALIDATION_REQUIRED' | translate }}</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- BUTTONS -->
+  <div class="flex flex-col gap-y-4">
+    <div class="flex justify-between items-center">
+      <span [routerLink]="['../', 'forgot-password']" class="justify-start hover:cursor-pointer hover:underline">{{ 'UNAUTHENTICATED.SIGN_IN_FORGOT_PASSWORD' | translate }}</span>
+      <div class="flex flex-row justify-end items-center gap-x-2">
+        @if (requestInProgress()) {
+          <mat-spinner diameter="30"></mat-spinner>
+        }
+        <button mat-flat-button [disabled]="!form.valid || requestInProgress()">
+          {{ 'UNAUTHENTICATED.SIGN_IN_BUTTON' | translate }}
+        </button>
+      </div>
+    </div>
+
+    @if (openIdConnectProviders$ | async; as openIdProviders) {
+      @if (openIdProviders.length) {
+        <div class="flex flex-row w-full justify-center items-center gap-x-4 h-1">
+          <mat-divider class="flex flex-grow"/>
+          <div>or</div>
+          <mat-divider class="flex flex-grow"/>
+        </div>
+
+        <div class="flex flex-row justify-center items-center gap-x-2">
+          @for (provider of openIdProviders; track $index) {
+            <button mat-mini-fab matTooltip="{{ provider.issuer }}" (click)="loginWithProvider(provider.uuid); $event.preventDefault()">
+              @if (provider.issuer.includes('google')) {
+                <mat-icon svgIcon="oidc_google"/>
+              } @else if (provider.issuer.includes('apple')) {
+                <mat-icon svgIcon="oidc_apple"/>
+              } @else if (provider.issuer.includes('microsoft')) {
+                <mat-icon svgIcon="oidc_microsoft"/>
+              } @else {
+                <mat-icon svgIcon="oidc_keycloak"/>
+              }
+            </button>
+          }
+        </div>
+      }
+    }
+
+    @if (signupEnabled() || (selfRegistration()?.eulaAccepted && selfRegistration()?.selfRegistration)) {
+      <mat-divider></mat-divider>
+      <div class="flex justify-between items-center">
+        <span class="justify-start">{{ 'UNAUTHENTICATED.CREATE_AN_ACCOUNT_TEXT' | translate }}</span>
+        <button mat-flat-button class="justify-end" [routerLink]="['../', 'register']">
+          {{ 'UNAUTHENTICATED.CREATE_AN_ACCOUNT' | translate }}
+        </button>
+      </div>
+    }
+  </div>
+</form>

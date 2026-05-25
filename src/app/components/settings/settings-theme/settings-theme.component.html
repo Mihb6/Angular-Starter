@@ -1,0 +1,10 @@
+<mat-card class="w-160 p-4">
+  <div class="flex flex-col gap-y-4">
+    <h2>{{ 'SETTINGS.THEME' | translate }}</h2>
+    <mat-select [formControl]="theme">
+      <mat-option [value]="'SYSTEM'">{{ 'SETTINGS.THEME_SYSTEM' | translate }}</mat-option>
+      <mat-option [value]="'LIGHT'">{{ 'SETTINGS.THEME_LIGHT' | translate }}</mat-option>
+      <mat-option [value]="'DARK'">{{ 'SETTINGS.THEME_DARK' | translate }}</mat-option>
+    </mat-select>
+  </div>
+</mat-card>

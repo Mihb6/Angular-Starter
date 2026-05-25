@@ -1,0 +1,56 @@
+<div class="flex flex-col justify-center h-full bg-no-repeat bg-cover bg-center" [ngStyle]="{ backgroundImage: 'url(' + signInImage() + ')'}">
+  <div class="w-full flex items-center justify-center flex-grow">
+    <mat-card class="p-8">
+      <div class="flex flex-col justify-center items-center space-y-12">
+        <img class="flex max-h-[40px]" [attr.src]="logo()" alt="logo"/>
+        <div class="w-137">
+          @switch (stage()) {
+            @case ('EMAIL') {
+              <app-email-sign-in [requestInProgress]="requestInProgress()" (submitForm)="submit($event)" (email)="email.set($event)"/>
+            }
+            @case ('TOTP_VERIFICATION') {
+              <app-totp-verification [token]="token()" (verified)="onTotpVerified()"/>
+            }
+            @case ('TOTP_AUTHENTICATION') {
+              <app-totp-sign-in (totp)="authenticateWithTotp($event)"/>
+            }
+          }
+        </div>
+
+        @if (whiteLabeling()?.copyrightVisible) {
+          <div class="copyright-info"> {{ copyright() }}</div>
+        }
+
+        @if (requestError()) {
+          <mat-error class="text-center w-137"> {{ requestError() | translate }}
+            @if (notVerified()) {
+              <a href="#" class="text-[var(--mat-sys-primary)] underline" (click)="resendEmail()">{{ 'UNAUTHENTICATED.RESEND_EMAIL' | translate }}</a>
+              <span>{{ 'UNAUTHENTICATED.RESEND_EMAIL_2' | translate }}</span>
+            }
+          </mat-error>
+        }
+      </div>
+    </mat-card>
+  </div>
+
+  @if (whiteLabeling()?.connectMobileAppVisible || whiteLabeling()?.mobileAppLinksVisible) {
+    <div class="w-full p-4 flex flex-row gap-x-4 items-center justify-center">
+      @if (whiteLabeling()?.mobileAppLinksVisible) {
+        <a class="block w-[150px]" [href]="whiteLabeling()?.iosAppUrl" target="_blank">
+          <img src="/assets/icons/ico_app_store.svg" alt="Apple store"/>
+        </a>
+      }
+      @if (whiteLabeling()?.connectMobileAppVisible) {
+        <div class="flex flex-col items-center justify-center overflow-hidden rounded-[10px]">
+          <qrcode [matTooltip]="'SETTINGS.SCAN_THIS_CODE_TO_CONNECT_YOUR_SMARTPHONE' | translate" [qrdata]="whiteLabeling()?.baseUrl ?? ''" errorCorrectionLevel="H" elementType="canvas" [width]="80"></qrcode>
+        </div>
+      }
+
+      @if (whiteLabeling()?.mobileAppLinksVisible) {
+        <a class="block w-[150px]" [href]="whiteLabeling()?.androidAppUrl" target="_blank">
+          <img src="/assets/icons/ico_play_store.svg" alt="Android App Store"/>
+        </a>
+      }
+    </div>
+  }
+</div>

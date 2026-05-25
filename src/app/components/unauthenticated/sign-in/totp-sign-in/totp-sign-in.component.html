@@ -1,0 +1,9 @@
+<div>
+  <form class="flex flex-col gap-y-4">
+    <div>{{ 'UNAUTHENTICATED.TWO_FACTOR_AUTHENTICATION_MESSAGE' | translate }}</div>
+    <ng-otp-input [formControl]="otpControl" [config]="{ length: 6 }" class="flex justify-center text-black"/>
+    <div class="flex justify-end">
+      <button mat-stroked-button>{{ 'COMMON.BACK' | translate }}</button>
+    </div>
+  </form>
+</div>

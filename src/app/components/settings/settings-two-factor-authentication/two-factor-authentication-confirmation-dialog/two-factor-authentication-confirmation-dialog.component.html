@@ -1,0 +1,26 @@
+<div class="dialog-wrapper flex flex-col overflow-hidden">
+  <h2 mat-dialog-title>{{ 'SETTINGS.TWO_FACTOR_AUTHENTICATION_CONFIRMATION_TITLE' | translate }}</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+      <mat-form-field subscriptSizing="fixed" class="flex flex-1 w-full">
+        <mat-label>{{ 'SETTINGS.TWO_FACTOR_AUTHENTICATION_PASSWORD' | translate }}</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"/>
+        <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                [attr.aria-label]="'Toggle password visibility'">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (form.get('password')?.hasError('required')) {
+          <mat-error>{{ 'COMMON.ERROR_VALIDATION_REQUIRED' | translate }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-dialog-actions>
+        <div class="flex justify-end items-end w-full">
+          <button mat-button mat-dialog-close>{{ 'COMMON.CANCEL' | translate }}</button>
+          <button mat-raised-button
+                  [disabled]="!form.valid || !form.dirty">{{ 'COMMON.SAVE' | translate }}
+          </button>
+        </div>
+      </mat-dialog-actions>
+    </mat-dialog-content>
+  </form>
+</div>

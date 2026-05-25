@@ -1,0 +1,29 @@
+<div class="h-screen flex flex-col">
+  <app-header class="z-10"/>
+  <div class="w-full flex flex-row sidenav-container">
+    <div class="sidenav shrink-0 overflow-x-hidden pt-4 px-3" [class.opened]="sideNavigationOpened">
+      @for (feature of features(); track feature) {
+        <button *appRequiresPermission="feature.permission" (click)="selectFeature(feature)"
+                class="flex flex-row items-center h-10 {{ sideNavigationOpened ? 'w-58' : 'w-10' }} transition-all ease-in duration-250 rounded-lg cursor-pointer hover:bg-hover-color"
+                [class.hover:bg-hover-color]="!isFeatureSelected(feature)"
+                [style.backgroundColor]="isFeatureSelected(feature) ? getGeneratedColor(feature.primaryColor) : ''"
+                matRipple
+        >
+          <div class="flex flex-shrink-0 w-10 h-10 justify-center items-center" [matTooltip]="feature.name | translate" matTooltipPosition="right">
+            <mat-icon [svgIcon]="feature.icon.id" [class.text-mat-sys-surface]="isFeatureSelected(feature)" [style.color]="isFeatureSelected(feature) ? '' : getGeneratedColor(feature.primaryColor)"/>
+          </div>
+            <div [ngClass]="sideNavigationOpened ? 'opacity-100': 'opacity-0'" [class.text-mat-sys-surface]="isFeatureSelected(feature)" [style.color]="isFeatureSelected(feature) ? '' : getGeneratedColor(feature.primaryColor)" class="transition-all ease-in duration-250 overflow-hidden break-keep whitespace-nowrap">{{ feature.name | translate }}
+            </div>
+        </button>
+      }
+
+        <button [ngClass]="sideNavigationOpened ? 'w-58' : 'w-10'" class="side-nav-toggle-button gap-x-4 cursor-pointer hover:bg-hover-color transition-all ease-in duration-250" (click)="onToggleSidenav()" [matTooltip]="'COMMON.SIDE_NAVIGATION_COLLAPSE' | translate" matTooltipPosition="right">
+          <mat-icon [ngClass]="{'rotate-180': sideNavigationOpened}" class="transition-all ease-in duration-250 !overflow-visible">keyboard_double_arrow_right</mat-icon>
+          <div [ngClass]="[sideNavigationOpened ? 'opacity-100': 'opacity-0', sideNavigationOpened ? '': 'w-0']" class="transition-all ease-in duration-250 overflow-hidden break-keep whitespace-nowrap">{{ 'COMMON.COLLAPSE' | translate }}</div>
+        </button>
+    </div>
+    <div class="flex-auto overflow-hidden sidenav-content">
+      <router-outlet/>
+    </div>
+  </div>
+</div>
