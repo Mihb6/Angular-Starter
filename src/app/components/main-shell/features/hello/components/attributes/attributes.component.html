@@ -1,0 +1,11 @@
+<div class="layout">
+  <app-attribute-list
+    [attributes]="attributes()"
+    [selectedAttribute]="selectedAttribute()"
+    (attributeSelected)="selectAttribute($event)"
+  />
+  <div class="divider-vertical"></div>
+  <app-attribute-detail
+    [attribute]="selectedAttribute()"
+  />
+</div>

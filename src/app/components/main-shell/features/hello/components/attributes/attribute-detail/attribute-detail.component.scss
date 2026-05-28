@@ -1,0 +1,63 @@
+:host {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.content-container {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.card {
+  background: #2a2a2a;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+
+  .label {
+    font-weight: 600;
+    color: white;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .value {
+    color: #e2c630;
+    font-size: 14px;
+  }
+
+  &.has-action {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .info-group {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+.value-icon {
+  color: #e2c630;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.action-icon {
+  color: #e2c630;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover { transform: scale(1.1); }
+}

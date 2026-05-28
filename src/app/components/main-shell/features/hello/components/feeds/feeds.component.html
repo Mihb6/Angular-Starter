@@ -1,0 +1,14 @@
+<div class="layout">
+  <app-feed-list
+    [feeds]="feeds()"
+    [selectedFeed]="selectedFeed()"
+    (feedSelected)="selectFeed($event)"
+  />
+  <div class="divider-vertical"></div>
+  <app-feed-detail
+    [feed]="selectedFeed()"
+    [isLoading]="isLoading()"
+    [hasChartData]="hasChartData()"
+    [chartOptions]="chartOptions()"
+  />
+</div>

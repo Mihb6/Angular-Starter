@@ -1,0 +1,19 @@
+.card {
+  background: #2a2a2a;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+
+  .label {
+    font-weight: 600;
+    color: white;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .value {
+    color: #e2c630;
+    font-size: 14px;
+  }
+}

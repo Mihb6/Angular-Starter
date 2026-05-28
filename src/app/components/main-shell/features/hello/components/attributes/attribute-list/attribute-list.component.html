@@ -1,0 +1,22 @@
+<div class="sidebar">
+  <div class="search-box">
+    <input
+      type="text"
+      placeholder="Search attributes..."
+      (input)="searchTerm.set($any($event.target).value)"
+    />
+    <span class="search-icon">🔍</span>
+  </div>
+  <div class="divider"></div>
+
+  @for (attr of filteredAttributes(); track attr.name) {
+    <div
+      class="feed-item"
+      [class.active]="selectedAttribute()?.name === attr.name"
+      (click)="attributeSelected.emit(attr)"
+    >
+      <span class="feed-icon">☰</span>
+      <span class="feed-name">{{ attr.name }}</span>
+    </div>
+  }
+</div>

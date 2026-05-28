@@ -1,0 +1,16 @@
+<div class="tabs">
+  <button
+    class="tab"
+    [class.active]="activeTab() === 'feeds'"
+    (click)="tabChanged.emit('feeds')"
+  >
+    Feeds
+  </button>
+  <button
+    class="tab"
+    [class.active]="activeTab() === 'attributes'"
+    (click)="tabChanged.emit('attributes')"
+  >
+    Attributes
+  </button>
+</div>

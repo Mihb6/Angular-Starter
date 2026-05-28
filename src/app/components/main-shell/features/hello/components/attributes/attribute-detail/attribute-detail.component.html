@@ -1,0 +1,35 @@
+@if (attribute(); as attr) {
+  <div class="content-container">
+
+    <app-info-card label="Path" [value]="attr.path" />
+
+    <div class="card has-action">
+      <div class="info-group">
+        <span class="label">AICD</span>
+        <span class="value">{{ attr.aicd }}</span>
+      </div>
+      <span class="action-icon">✎</span>
+    </div>
+
+    <div class="card">
+      <span class="label">Required</span>
+      <span class="value-icon">{{ attr.required ? '✓' : '✕' }}</span>
+    </div>
+
+    <div class="card">
+      <span class="label">Read only</span>
+      <span class="value-icon">{{ attr.readOnly ? '✓' : '✕' }}</span>
+    </div>
+
+    <app-info-card label="Type" [value]="attr.type" />
+
+    <div class="card has-action">
+      <div class="info-group">
+        <span class="label">Value</span>
+        <span class="value">{{ attr.value }}</span>
+      </div>
+      <span class="action-icon">✎</span>
+    </div>
+
+  </div>
+}

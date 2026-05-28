@@ -1,0 +1,64 @@
+@if (feed(); as f) {
+  <div class="content-container">
+
+    @if (f.dataType === 'NUMERIC') {
+      <app-feed-chart
+        [isLoading]="isLoading()"
+        [hasChartData]="hasChartData()"
+        [chartOptions]="chartOptions()"
+      />
+    }
+
+    <app-info-card label="Name"  [value]="f.name" />
+    <app-info-card label="AICD" [value]="f.description ?? '-'" />
+
+    @if (f.dataType === 'NUMERIC') {
+      <app-info-card label="Current status" value="Normal" />
+    }
+
+    <div class="card">
+      <span class="label">Latest received value</span>
+      <span class="value">
+        @if (f.lastReceivedReading && f.lastReceivedReading.data !== '-') {
+          {{ f.lastReceivedReading.data }} @ {{ f.lastReceivedReading.receivingTime | date: 'dd/MM/yyyy "at" HH:mm' }}
+        } @else {
+          -
+        }
+      </span>
+    </div>
+
+    <div class="card">
+      <span class="label">Latest set value</span>
+      <span class="value">
+        @if (f.lastSentReading && f.lastSentReading.data !== '-') {
+          {{ f.lastSentReading.data }} @ {{ f.lastSentReading.receivingTime | date: 'dd/MM/yyyy "at" HH:mm' }}
+        } @else {
+          -
+        }
+      </span>
+    </div>
+
+    @if (f.dataType === 'NUMERIC') {
+      <app-info-card label="Reference"   [value]="f.reference ?? '-'" />
+      <app-info-card label="Source type" [value]="f.sourceType ?? '-'" />
+    }
+
+    <app-info-card
+      label="Reading type / Unit"
+      [value]="(f.readingTypeName ?? '-') + ' / ' + (f.unitName ?? '-')"
+    />
+
+    <app-info-card label="Path" [value]="feedPath()" />
+
+    @if (f.dataType === 'NUMERIC') {
+      <app-info-card
+        label="Status categorisation"
+        [value]="f.categorisationEnabled ? 'Enabled' : 'Disabled'"
+      />
+      <app-info-card label="Precision" [value]="f.precision?.toString() ?? '-'" />
+    }
+
+    <app-info-card label="Retention" [value]="f.retention?.toString() ?? '-'" />
+
+  </div>
+}

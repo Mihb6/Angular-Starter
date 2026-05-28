@@ -1,0 +1,12 @@
+<div class="card chart-card">
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+    </div>
+  } @else if (hasChartData()) {
+    <span class="label">Data in the last 24 hours</span>
+    <div echarts [options]="chartOptions()!" class="chart"></div>
+  } @else {
+    <span class="no-data">No data in the last 24 hours</span>
+  }
+</div>
