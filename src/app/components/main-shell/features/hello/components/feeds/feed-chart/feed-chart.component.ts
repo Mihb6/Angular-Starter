@@ -15,3 +15,5 @@ export class FeedChartComponent {
   hasChartData = input.required<boolean>();
   chartOptions = input.required<EChartsOption | null>();
 }
+
+//ova komp da je shareovana, zna za id feeda  logika sa listbna feed chart 
