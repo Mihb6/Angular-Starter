@@ -3,7 +3,7 @@
     <input
       type="text"
       placeholder="Search feeds..."
-      (input)="searchTerm.set($any($event.target).value)"
+      (input)="onSearch($any($event.target).value)"
     />
     <span class="search-icon">🔍</span>
   </div>
@@ -15,7 +15,7 @@
       [class.active]="selectedFeed()?.name === feed.name"
       (click)="feedSelected.emit(feed)"
     >
-      <span class="feed-icon">((·))</span>
+      <span class="feed-icon">☰</span>
       <span class="feed-name">{{ feed.name }}</span>
     </div>
   }

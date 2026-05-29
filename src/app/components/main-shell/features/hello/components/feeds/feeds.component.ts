@@ -1,7 +1,7 @@
 import { Component, signal, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EChartsOption } from 'echarts';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, catchError, of } from 'rxjs';
 import { FeedListComponent } from './feed-list/feed-list.component';
 import { FeedDetailComponent } from './feed-detail/feed-detail.component';
 import { Reading, SemanticFeedDetails } from '../../../../../../rest/data/semantic-feed.model';
@@ -52,15 +52,28 @@ export class FeedsComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  onSearchChanged(term: string): void {
+    if (term.length > 0) {
+      this.selectedFeed.set(null);
+      this.chartOptions.set(null);
+      this.hasChartData.set(false);
+    }
+  }
+
   private loadFeeds(): void {
     this.apiService.semanticApi
       .get(DEVICE_ID)
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(err => {
+          console.error('Failed to load feeds', err);
+          return of({ data: null } as ApiResponse<Semantic>);
+        })
+      )
       .subscribe((res: ApiResponse<Semantic>) => {
         if (!res.data) return;
 
-        const feeds = res.data.feeds.filter(
-          (f: SemanticFeedDetails) => !f.name.toLowerCase().includes('user input')
-        );
+        const feeds = res.data.feeds;
         this.feeds.set(feeds);
 
         const urlFeedName = this.route.snapshot.params['feedName'];
@@ -100,6 +113,14 @@ export class FeedsComponent implements OnInit, OnDestroy {
 
     this.apiService.semanticFeedApi
       .listReadings(DEVICE_ID, feedName, { from, to: now })
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(err => {
+          console.error('Failed to load chart', err);
+          this.isLoading.set(false);
+          return of({ data: null } as ApiResponse<Reading[]>);
+        })
+      )
       .subscribe((res: ApiResponse<Reading[]>) => {
         this.isLoading.set(false);
 

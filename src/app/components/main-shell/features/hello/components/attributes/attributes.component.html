@@ -3,6 +3,7 @@
     [attributes]="attributes()"
     [selectedAttribute]="selectedAttribute()"
     (attributeSelected)="selectAttribute($event)"
+    (searchChanged)="onSearchChanged($event)"
   />
   <div class="divider-vertical"></div>
   <app-attribute-detail

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../../../../common/service/api.service';
 import { ApiResponse } from '../../../../../../rest/rest.model';
 import { AppAttribute } from '../../types';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, catchError, of } from 'rxjs';
 import { AttributeListComponent } from './attribute-list/attribute-list.component';
 import { AttributeDetailComponent } from './attribute-detail/attribute-detail.component';
 import { SemanticAttributeDetails } from '../../../../../../rest/data/semantic-attribute.model';
@@ -49,9 +49,22 @@ export class AttributesComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  onSearchChanged(term: string): void {
+    if (term.length > 0) {
+      this.selectedAttribute.set(null);
+    }
+  }
+
   private loadAttributes(): void {
     this.apiService.semanticApi
       .get(DEVICE_ID)
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(err => {
+          console.error('Failed to load attributes', err);
+          return of({ data: null } as ApiResponse<Semantic>); //proveri da li da menjas //notification service
+        })
+      )
       .subscribe((res: ApiResponse<Semantic>) => {
         if (!res.data) return;
 

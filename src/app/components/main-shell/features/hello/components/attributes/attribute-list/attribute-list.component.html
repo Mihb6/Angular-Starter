@@ -3,7 +3,7 @@
     <input
       type="text"
       placeholder="Search attributes..."
-      (input)="searchTerm.set($any($event.target).value)"
+      (input)="onSearch($any($event.target).value)"
     />
     <span class="search-icon">🔍</span>
   </div>

@@ -1,5 +1,6 @@
 import { Component, input, output, signal, computed } from '@angular/core';
 import { SemanticFeedDetails } from '../../../../../../../rest/data/semantic-feed.model';
+
 @Component({
   selector: 'app-feed-list',
   standalone: true,
@@ -10,6 +11,7 @@ export class FeedListComponent {
   feeds        = input.required<SemanticFeedDetails[]>();
   selectedFeed = input<SemanticFeedDetails | null>(null);
   feedSelected = output<SemanticFeedDetails>();
+  searchChanged = output<string>();
 
   searchTerm = signal<string>('');
 
@@ -19,4 +21,9 @@ export class FeedListComponent {
       ? this.feeds().filter(f => f.name.toLowerCase().includes(text))
       : this.feeds();
   });
+
+  onSearch(value: string): void {
+    this.searchTerm.set(value);
+    this.searchChanged.emit(value);
+  }
 }

@@ -3,12 +3,13 @@
     [feeds]="feeds()"
     [selectedFeed]="selectedFeed()"
     (feedSelected)="selectFeed($event)"
+    (searchChanged)="onSearchChanged($event)"
   />
   <div class="divider-vertical"></div>
   <app-feed-detail
     [feed]="selectedFeed()"
-    [isLoading]="isLoading()"
-    [hasChartData]="hasChartData()"
     [chartOptions]="chartOptions()"
+    [hasChartData]="hasChartData()"
+    [isLoading]="isLoading()"
   />
 </div>

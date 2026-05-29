@@ -11,6 +11,7 @@ export class AttributeListComponent {
   attributes        = input.required<AppAttribute[]>();
   selectedAttribute = input<AppAttribute | null>(null);
   attributeSelected = output<AppAttribute>();
+  searchChanged     = output<string>();
 
   searchTerm = signal<string>('');
 
@@ -20,4 +21,9 @@ export class AttributeListComponent {
       ? this.attributes().filter(a => a.name.toLowerCase().includes(text))
       : this.attributes();
   });
+
+  onSearch(value: string): void {
+    this.searchTerm.set(value);
+    this.searchChanged.emit(value);
+  }
 }
